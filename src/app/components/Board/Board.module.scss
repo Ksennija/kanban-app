@@ -1,0 +1,16 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.board {
+  display: flex;
+  gap: $spacing-lg;
+
+  align-items: flex-start;
+
+  padding: $spacing-lg;
+
+  overflow-x: auto;
+  min-height: 100vh;
+
+  @include scrollbar;
+}

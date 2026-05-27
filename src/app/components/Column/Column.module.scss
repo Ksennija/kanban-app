@@ -1,0 +1,27 @@
+@use '../../styles/variables' as *;
+
+.column {
+  min-width: 320px;
+  background: $column-bg;
+  border-radius: $radius;
+  padding: $spacing-md;
+
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  max-height: calc(100vh - 120px);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  overflow-y: auto;
+}
