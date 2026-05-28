@@ -2,17 +2,42 @@
 
 .card {
   background: $card-bg;
-  padding: $spacing-md;
+  padding: $spacing-sm $spacing-md;
   border-radius: $radius;
   box-shadow: $shadow;
-  cursor: pointer;
   border: 1px solid $border;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
 
   &:hover {
     transform: translateY(-2px);
+
+    .deleteButton {
+      opacity: 1;
+    }
   }
 
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: $text;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  padding: 0 $spacing-xs;
+
+  &:hover {
+    color: #c0392b;
+  }
 }

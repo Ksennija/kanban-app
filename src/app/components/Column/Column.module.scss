@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .column {
@@ -24,4 +25,41 @@
   gap: $spacing-sm;
 
   overflow-y: auto;
+}
+
+.addTask {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.input {
+  flex: 1;
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $border;
+  border-radius: $radius;
+  font-size: 14px;
+  background: $card-bg;
+  color: $text;
+
+  &:focus {
+    outline: none;
+    border-color: color.adjust($border, $lightness: -15%);
+  }
+}
+
+.addButton {
+  padding: $spacing-xs $spacing-sm;
+  border: none;
+  border-radius: $radius;
+  background: $text;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
