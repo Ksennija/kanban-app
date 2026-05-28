@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { ColumnType, Task } from '../types/kanban';
 
 interface BoardStore {
@@ -29,47 +30,52 @@ const initialColumns: ColumnType[] = [
   },
 ];
 
-export const useBoardStore = create<BoardStore>((set) => ({
-  columns: initialColumns,
+export const useBoardStore = create<BoardStore>()(
+  persist(
+    (set) => ({
+      columns: initialColumns,
 
-  addTask: (columnId, title) =>
-    set((state) => ({
-      columns: state.columns.map((col) =>
-        col.id === columnId
-          ? { ...col, tasks: [...col.tasks, { id: crypto.randomUUID(), title }] }
-          : col
-      ),
-    })),
+      addTask: (columnId, title) =>
+        set((state) => ({
+          columns: state.columns.map((col) =>
+            col.id === columnId
+              ? { ...col, tasks: [...col.tasks, { id: crypto.randomUUID(), title }] }
+              : col
+          ),
+        })),
 
-  deleteTask: (columnId, taskId) =>
-    set((state) => ({
-      columns: state.columns.map((col) =>
-        col.id === columnId
-          ? { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) }
-          : col
-      ),
-    })),
+      deleteTask: (columnId, taskId) =>
+        set((state) => ({
+          columns: state.columns.map((col) =>
+            col.id === columnId
+              ? { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) }
+              : col
+          ),
+        })),
 
-  moveTask: (taskId, fromColumnId, toColumnId) =>
-    set((state) => {
-      let taskToMove: Task | undefined;
+      moveTask: (taskId, fromColumnId, toColumnId) =>
+        set((state) => {
+          let taskToMove: Task | undefined;
 
-      const columns = state.columns.map((col) => {
-        if (col.id === fromColumnId) {
-          taskToMove = col.tasks.find((t) => t.id === taskId);
-          return { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) };
-        }
-        return col;
-      });
+          const columns = state.columns.map((col) => {
+            if (col.id === fromColumnId) {
+              taskToMove = col.tasks.find((t) => t.id === taskId);
+              return { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) };
+            }
+            return col;
+          });
 
-      if (!taskToMove) return state;
+          if (!taskToMove) return state;
 
-      return {
-        columns: columns.map((col) =>
-          col.id === toColumnId
-            ? { ...col, tasks: [...col.tasks, taskToMove!] }
-            : col
-        ),
-      };
+          return {
+            columns: columns.map((col) =>
+              col.id === toColumnId
+                ? { ...col, tasks: [...col.tasks, taskToMove!] }
+                : col
+            ),
+          };
+        }),
     }),
-}));
+    { name: 'kanban-board' }
+  )
+);
