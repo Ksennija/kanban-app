@@ -6,6 +6,7 @@ interface BoardStore {
   columns: ColumnType[];
   addTask: (columnId: string, title: string) => void;
   deleteTask: (columnId: string, taskId: string) => void;
+  updateTask: (columnId: string, taskId: string, title: string) => void;
   moveTask: (taskId: string, fromColumnId: string, toColumnId: string) => void;
 }
 
@@ -49,6 +50,20 @@ export const useBoardStore = create<BoardStore>()(
           columns: state.columns.map((col) =>
             col.id === columnId
               ? { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) }
+              : col
+          ),
+        })),
+
+      updateTask: (columnId, taskId, title) =>
+        set((state) => ({
+          columns: state.columns.map((col) =>
+            col.id === columnId
+              ? {
+                  ...col,
+                  tasks: col.tasks.map((t) =>
+                    t.id === taskId ? { ...t, title } : t
+                  ),
+                }
               : col
           ),
         })),
