@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { useBoardStore } from '../../store/boardStore';
+import { useDraggable } from "@dnd-kit/react";
+import { useState, useRef, useEffect } from "react";
+import { useBoardStore } from "../../store/boardStore";
 
-import styles from './TaskCard.module.scss';
+import styles from "./TaskCard.module.scss";
 
 interface Props {
   taskId: string;
@@ -15,8 +16,12 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
   const deleteTask = useBoardStore((s) => s.deleteTask);
   const updateTask = useBoardStore((s) => s.updateTask);
 
+  const { ref } = useDraggable({
+    id: taskId,
+  });
+
   const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,8 +51,8 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSave();
-    if (e.key === 'Escape') handleCancel();
+    if (e.key === "Enter") handleSave();
+    if (e.key === "Escape") handleCancel();
   };
 
   if (isEditing) {
@@ -62,10 +67,18 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
           onBlur={handleSave}
         />
         <div className={styles.editActions}>
-          <button className={styles.saveButton} onMouseDown={handleSave} aria-label="Save">
+          <button
+            className={styles.saveButton}
+            onMouseDown={handleSave}
+            aria-label="Save"
+          >
             ✓
           </button>
-          <button className={styles.cancelButton} onMouseDown={handleCancel} aria-label="Cancel">
+          <button
+            className={styles.cancelButton}
+            onMouseDown={handleCancel}
+            aria-label="Cancel"
+          >
             ×
           </button>
         </div>
@@ -74,7 +87,7 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
   }
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} ref={ref}>
       <span>{task.title}</span>
       <div className={styles.actions}>
         <button
