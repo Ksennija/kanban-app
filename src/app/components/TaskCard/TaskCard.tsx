@@ -18,6 +18,7 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
 
   const { ref } = useDraggable({
     id: taskId,
+    data: { columnId },
   });
 
   const [isEditing, setIsEditing] = useState(false);
