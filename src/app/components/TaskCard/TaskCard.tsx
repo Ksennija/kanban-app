@@ -1,4 +1,4 @@
-import { useDraggable } from "@dnd-kit/react";
+import { useSortable } from "@dnd-kit/react/sortable";
 import { useState, useRef, useEffect } from "react";
 import { useBoardStore } from "../../store/boardStore";
 
@@ -7,18 +7,22 @@ import styles from "./TaskCard.module.scss";
 interface Props {
   taskId: string;
   columnId: string;
+  index: number;
 }
 
-export const TaskCard = ({ taskId, columnId }: Props) => {
+export const TaskCard = ({ taskId, columnId, index }: Props) => {
   const task = useBoardStore((s) =>
     s.columns.find((c) => c.id === columnId)?.tasks.find((t) => t.id === taskId)
   );
   const deleteTask = useBoardStore((s) => s.deleteTask);
   const updateTask = useBoardStore((s) => s.updateTask);
 
-  const { ref } = useDraggable({
+  const { ref, isDragging } = useSortable({
     id: taskId,
-    data: { columnId },
+    index,
+    group: columnId,
+    data: { type: "task", columnId },
+    accept: (draggable) => draggable.data?.type === "task",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -88,7 +92,7 @@ export const TaskCard = ({ taskId, columnId }: Props) => {
   }
 
   return (
-    <div className={styles.card} ref={ref}>
+    <div className={styles.card} ref={ref} style={{ opacity: isDragging ? 0.4 : 1 }}>
       <span>{task.title}</span>
       <div className={styles.actions}>
         <button
